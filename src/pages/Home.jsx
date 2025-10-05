@@ -1,7 +1,19 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [apiResponse, setApiResponse] = useState("");
+
+  const testApiCall = async () => {
+    try {
+      const response = await fetch('/api/hello');
+      const data = await response.text();
+      setApiResponse(data);
+    } catch (error) {
+      setApiResponse(`Error: ${error.message}`);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -25,6 +37,20 @@ export default function Home() {
         >
           Sign Up
         </button>
+
+        {/* Test API Call Button - Remove this when deploying as static frontend */}
+        <button
+          onClick={testApiCall}
+          className="w-full py-2 bg-green-500 text-white rounded"
+        >
+          Test API Call (/hello)
+        </button>
+        
+        {apiResponse && (
+          <div className="w-full p-2 bg-gray-100 rounded text-sm">
+            <strong>API Response:</strong> {apiResponse}
+          </div>
+        )}
       </div>
     </div>
   );
